@@ -29,5 +29,5 @@ else
     ldflags	:= -s
 endif
 CXXFLAGS	:= -Wall -Wextra -Wredundant-decls -Wshadow
-cxxflags	+= -std=c++17 @pkg_cflags@ ${CXXFLAGS}
+cxxflags	+= -std=c++20 @pkg_cflags@ ${CXXFLAGS}
 ldflags		+= @pkg_ldflags@ ${LDFLAGS}

@@ -140,7 +140,7 @@ static bool load_omegarc (const char* filename)
     istream is (buf);
 
     uint8_t fmt, savefmt;
-    if (is.remaining() < stream_size_of(fmt)+stream_size_of(savefmt)+stream_size_of(Searchnum)+stream_size_of(Verbosity))
+    if (is.remaining() < stream_sizeof(fmt)+stream_sizeof(savefmt)+stream_sizeof(Searchnum)+stream_sizeof(Verbosity))
 	return false;
     is >> fmt >> savefmt >> Searchnum >> Verbosity;
     if (fmt != OMEGA_PLAYER_FORMAT)

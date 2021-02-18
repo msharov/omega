@@ -48,7 +48,7 @@ bool save_game (void)
     ostream os (buf);
     os << h << Player << World;
     if (h.compressed)
-	buf.replace (buf.iat (stream_size_of(h)), buf.size()-stream_size_of(h), compress(buf));
+	buf.replace (buf.iat (stream_sizeof(h)), buf.size()-stream_sizeof(h), compress(buf));
     buf.write_file (savestr);
     mprint ("Game Saved.");
     writeok = true;
@@ -68,7 +68,7 @@ bool restore_game (void)
     memblock buf;
     buf.read_file (savestr);
     SGHeader header;
-    if (buf.size() < stream_size_of(header))
+    if (buf.size() < stream_sizeof(header))
 	return false;
 
     mprint ("Restoring...");
@@ -103,7 +103,7 @@ struct long4 {
 template <typename T, unsigned N>
 static inline void read_array (istream& is, T (&a)[N])
 {
-    is.align (stream_align<T>::value);
+    is.align (stream_alignof(a[0]));
     for (auto i : a)
 	is >> i;
 }
@@ -111,7 +111,7 @@ static inline void read_array (istream& is, T (&a)[N])
 template <typename Stm, typename T, unsigned N>
 static inline void write_array (Stm& os, const T (&a)[N])
 {
-    os.align (stream_align<T>::value);
+    os.align (stream_alignof(a[0]));
     for (auto i : a)
 	os << i;
 }
@@ -156,7 +156,7 @@ void player::read (istream& is)
     read_array (is, immunity);
     read_array (is, status);
     read_array (is, guildxp);
-    is.align (stream_align_of (name));
+    is.align (stream_alignof (name));
     is >> name >> meleestr;
 
     // Restore globals
@@ -181,7 +181,7 @@ void player::write (Stm& os) const
     write_array (os, immunity);
     write_array (os, status);
     write_array (os, guildxp);
-    os.align (stream_align_of (name));
+    os.align (stream_alignof (name));
     os << name << meleestr;
 
     // Save globals

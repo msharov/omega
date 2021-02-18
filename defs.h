@@ -780,8 +780,8 @@ struct object_data {
     const char* objstr;
     const char* truename;
     const char* cursestr;
+    static const constexpr streamsize stream_alignment = 2;
 };
-STREAM_ALIGN (object_data, 2);
 
 struct object : public object_data {
 public:
@@ -797,9 +797,9 @@ public:
     void	read (istream& is);
     template <typename Stm>
     void	write (Stm& os) const;
+    static const constexpr streamsize stream_alignment = 2;
 };
 using pob = object*;
-STREAM_ALIGN (object, 2);
 
 struct monster_data {
     uint8_t id;
@@ -830,8 +830,8 @@ struct monster_data {
     const char* monstring;
     const char* corpsestr;
     const char* meleestr;
+    static const constexpr streamsize stream_alignment = 4;
 };
-STREAM_ALIGN (monster_data, 4);
 
 struct monster : public monster_data {
     vector<object>	possessions;
@@ -846,12 +846,12 @@ public:
     void		read (istream& is);
     template <typename Stm>
     void		write (Stm& os) const;
+    static const constexpr streamsize stream_alignment = 4;
     const char*		name (void) const PURE;
     const char*		by_name (void) const PURE;
     inline const char*	definite_article (void) const PURE	{ return uniqueness == COMMON ? "the " : ""; }
     inline void		pickup (const object& o)		{ possessions.push_back(o); }
 };
-STREAM_ALIGN (monster, 4);
 
 struct player_pod {
     uint32_t	x,y;
@@ -923,8 +923,8 @@ public:
     void		read (istream& is);
     template <typename Stm>
     void		write (Stm& os) const;
+    static const constexpr streamsize stream_alignment = 4;
 };
-STREAM_ALIGN (player, 4);
 
 // dungeon locations
 struct location {
@@ -961,6 +961,7 @@ public:
     void		read (istream& is);
     template <typename Stm>
     void		write (Stm& os) const;
+    static const constexpr streamsize stream_alignment = 4;
     template <typename SiteFunc>
     static inline void	load_map (EEnvironment e, const char* edata, SiteFunc sf);
     void		Generate (EEnvironment e, uint8_t subeid);
@@ -980,7 +981,6 @@ public:
     inline void		SetTempleDeity (uint8_t id)	{ generated = id; }
 };
 using plv = level*;
-STREAM_ALIGN (level, 4);
 
 class CWorld {
     enum { c_MaxLevels = 32 };
@@ -995,7 +995,7 @@ public:
     void		read (istream& is)		{ is >> _levels; }
     template <typename Stm>
     void		write (Stm& os) const		{ os << _levels; }
+    static const constexpr streamsize stream_alignment = 4;
 private:
     lvec_t		_levels;
 };
-STREAM_ALIGN (CWorld, 4);
